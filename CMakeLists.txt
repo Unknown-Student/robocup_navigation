@@ -7,6 +7,9 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -22,6 +25,29 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+# Include cpp "include" directory
+include_directories(include)
+
+# Create cpp executables
+add_executable(cpp_exe src/cpp_node.cpp)
+ament_target_dependencies(cpp_exe rclcpp)
+
+# Install cpp executables
+install(TARGETS
+  cpp_exe
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# Install python modules
+ament_python_install_package(${PROJECT_NAME})
+
+# Install python executables
+install(PROGRAMS
+  scripts/py_node.py
+  scripts/circle.py
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 install(DIRECTORY
   config launch robotino3_description src rcll_sim
