@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rclpy
-from robocup_navigation.module_to_include import MyNode
+from robocup_navigation.circle_module import MyNode
 
 def main(args=None):
     rclpy.init(args=args)
