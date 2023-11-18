@@ -13,6 +13,8 @@
   <depend>rclcpp</depend>
   <depend>rclpy</depend>
   <depend>geometry_msgs</depend>
+  <depend>requests</depend>
+  <depend>json</depend>
 
   <exec_depend>ros2launch</exec_depend>
   <exec_depend>joint_state_publisher</exec_depend>
