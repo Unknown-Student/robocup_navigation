@@ -47,6 +47,7 @@ install(PROGRAMS
   scripts/py_node.py
   scripts/circle.py
   scripts/omnidrive.py
+  scripts/nav_to_pose.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -13,6 +13,7 @@
   <depend>rclcpp</depend>
   <depend>rclpy</depend>
   <depend>geometry_msgs</depend>
+  <depend>nav2_simple_commander</depend>
   <depend>requests</depend>
   <depend>json</depend>
 
