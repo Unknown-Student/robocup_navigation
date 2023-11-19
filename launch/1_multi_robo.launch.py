@@ -39,18 +39,66 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
+        namespace='robotino1',
         parameters=[{'robot_description': robot_xacro,
-        'use_sim_time': True}] # add other parameters here if required
+        'use_sim_time': True,
+        'frame_prefix': 'robotino1/'}] # add other parameters here if required
    )
 
    spawn_entity = Node(
       package='gazebo_ros',
       executable='spawn_entity.py',
-      arguments=['-topic', 'robot_description',
+      arguments=['-topic', '/robotino1/robot_description',
                  '-entity', 'robotino',
                  '-x','4.5',
                  '-y','0.5',
-                 '-Y','3.14'],
+                 '-Y','3.14',
+                 '-robot_namespace', 'robotino1'],
+      output='screen'
+    )
+   
+   robot_state_pubilsher2 = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        namespace='robotino2',
+        output='screen',
+        parameters=[{'robot_description': robot_xacro,
+        'use_sim_time': True,
+        'frame_prefix': 'robotino2/'}] # add other parameters here if required
+   )
+   
+   spawn_entity2 = Node(
+      package='gazebo_ros',
+      executable='spawn_entity.py',
+      arguments=['-topic', '/robotino2/robot_description',
+                 '-entity', 'robotino2',
+                 '-x','5.5',
+                 '-y','0.5',
+                 '-Y','3.14',
+                 '-robot_namespace', 'robotino2'],
+      output='screen'
+    )
+   
+   robot_state_pubilsher3 = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        namespace='robotino3',
+        output='screen',
+        parameters=[{'frame_prefix': 'robotino3/',
+                     'robot_description': robot_xacro,
+                     'use_sim_time': True,
+                     }] # add other parameters here if required
+   )
+   
+   spawn_entity3 = Node(
+      package='gazebo_ros',
+      executable='spawn_entity.py',
+      arguments=['-topic', '/robotino3/robot_description',
+                 '-entity', 'robotino3',
+                 '-x','6.5',
+                 '-y','0.5',
+                 '-Y','3.14',
+                 '-robot_namespace', 'robotino3'],
       output='screen'
     )
    
@@ -79,10 +127,14 @@ def generate_launch_description():
 
    print(f"nav2:{os.path.join(pkg_share, 'launch', 'navigation_launch.py')}")
    print(f"slam:{os.path.join(pkg_share, 'launch', 'online_async_launch.py')}")
-   ld.add_action(nav2)
+   #ld.add_action(nav2)
    ld.add_action(robot_state_pubilsher)
+   ld.add_action(robot_state_pubilsher2)
+   ld.add_action(robot_state_pubilsher3)
    ld.add_action(gazebo)
    ld.add_action(spawn_entity)
-   ld.add_action(slam)
+   ld.add_action(spawn_entity2)
+   ld.add_action(spawn_entity3)
+   #ld.add_action(slam)
    ld.add_action(rviz2)
    return ld

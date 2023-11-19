@@ -1,11 +1,15 @@
 import os
 import xacro
 
-from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch_ros.actions import Node
+from launch import LaunchDescription
+from launch.actions import (DeclareLaunchArgument, IncludeLaunchDescription, RegisterEventHandler,
+                            LogInfo,TimerAction)
+from launch.event_handlers import (OnExecutionComplete, OnProcessExit,
+                                OnProcessIO, OnProcessStart, OnShutdown)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.substitutions import FindPackageShare
+
 
 
 def generate_launch_description():
@@ -76,13 +80,33 @@ def generate_launch_description():
       PythonLaunchDescriptionSource(os.path.join(pkg_share, 'launch', 'navigation_launch.py')),
       launch_arguments={'use_sim_time': 'true'}.items()
    )
+   path_bot = Node(
+      package = 'robocup_navigation',
+      executable = 'nav_to_pose.py',
+      name = 'path_bot'
+   )
+   start_path = RegisterEventHandler(
+         OnProcessStart(
+            target_action=spawn_entity,
+            on_start=[
+                  LogInfo(msg='Robot starts in 7s'),
+                  TimerAction(
+                  period=7.0,
+                  actions=[LogInfo(msg='Robot started'),
+                           path_bot
+                           ]
+                  )
+            ]
+         )
+      )
 
-   print(f"nav2:{os.path.join(pkg_share, 'launch', 'navigation_launch.py')}")
-   print(f"slam:{os.path.join(pkg_share, 'launch', 'online_async_launch.py')}")
+   
    ld.add_action(nav2)
    ld.add_action(robot_state_pubilsher)
    ld.add_action(gazebo)
    ld.add_action(spawn_entity)
    ld.add_action(slam)
    ld.add_action(rviz2)
+   #ld.add_action(path_bot)
+   ld.add_action(start_path)
    return ld
