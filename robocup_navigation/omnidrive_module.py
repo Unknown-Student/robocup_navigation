@@ -24,9 +24,11 @@ class Omnidrive(Node):
 
     def omnidrive_callback(self, data: Twist):
         self.get_logger().info("%f %f %f" % (data.linear.x, data.linear.y, data.angular.z))
-        pdata = {'vx':data.linear.x, 'vy':data.linear.y, 'omega':data.angular.z}
+        pdata = [data.linear.x, data.linear.y, data.angular.z]
+        print(pdata)
         try:
-            r = requests.post(url = Omnidrive.URL, params = Omnidrive.PARAMS, data = json.dumps(pdata) )
+            r = requests.post(url = Omnidrive.URL, data = json.dumps(pdata) )
+            self.get_logger().info(str(r.status_code))
             if r.status_code != requests.codes.ok:
                 self.get_logger().warning("post to %s with params %s failed" %  (Omnidrive.URL, Omnidrive.PARAMS))
         except requests.exceptions.RequestException as e:

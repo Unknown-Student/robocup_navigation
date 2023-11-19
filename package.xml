@@ -14,6 +14,8 @@
   <depend>rclpy</depend>
   <depend>geometry_msgs</depend>
   <depend>nav2_simple_commander</depend>
+  <depend>requests</depend>
+  <depend>json</depend>
   <depend>std_msgs.msgs</depend>
 
   <exec_depend>ros2launch</exec_depend>
