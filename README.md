@@ -7,3 +7,5 @@
 
 - Change DDS Middleware from FastDDS to CycloneDDS https://www.youtube.com/watch?v=jkoGkAd0GYk
 - ros-humble-gazebo-plugins
+
+- sudo apt install python3-opencv 
