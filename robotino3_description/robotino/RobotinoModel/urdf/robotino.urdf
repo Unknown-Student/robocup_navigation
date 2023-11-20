@@ -108,7 +108,7 @@
     </collision>
   </link>
   <joint name="camera_joint" type="fixed">
-    <origin rpy="0 0 1.570795" xyz="0.044 0 0.07"/>
+    <origin rpy="0 0 0" xyz="0.044 0 0.2"/>
     <parent link="base_link"/>
     <child link="camera_link"/>
   </joint>
@@ -119,12 +119,19 @@
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 1.570795" xyz="0 0 -0.13"/>
       <geometry>
         <mesh filename="package://robocup_navigation/robotino3_description/robotino/RobotinoModel/meshes/RobotinoCamera.dae" scale="0.01 0.01 0.01"/>
       </geometry>
     </visual>
   </link>
+  <joint name="camera_optical_joint" type="fixed">
+    <origin rpy="-1.570795 0 -1.570795" xyz="0 0 0"/>
+    <parent link="camera_link"/>
+    <child link="camera_link_optical"/>
+  </joint>
+  <link name="camera_link_optical"/>
+
   <joint name="anglebracketusb_joint" type="fixed">
     <origin rpy="0 0 1.570795" xyz="0.008 0 0.137"/>
     <parent link="base_link"/>
@@ -181,7 +188,7 @@
   <gazebo reference='laser_link'>
     <sensor name='laser' type='ray'>
       <pose> 0 0 0 0 0 0 </pose>
-      <visualize> true </visualize>
+      <visualize> false </visualize>
       <update_rate> 10 </update_rate>
       <ray>
         <scan>
@@ -204,6 +211,29 @@
         </ros>
         <output_type>sensor_msgs/LaserScan</output_type>
         <frame_name>laser_link</frame_name>
+      </plugin>
+    </sensor> 
+  </gazebo>
+
+  <gazebo reference='camera_link'>
+    <sensor name='camera' type='camera'>
+      <pose> 0 0 0 0 0 0 </pose>
+      <visualize> true </visualize>
+      <update_rate> 10 </update_rate>
+      <camera>
+        <horizontal_fov>1.089</horizontal_fov>
+        <image>
+          <format>R8G8B8</format>
+          <width>640</width>
+          <height>480</height>
+        </image>
+      </camera>
+      <clip>
+          <near>0.08</near>
+          <far>15.0</far>
+      </clip>
+      <plugin name='camera_controller' filename='libgazebo_ros_camera.so'>
+        <frame_name>camera_link_optical</frame_name>
       </plugin>
     </sensor> 
   </gazebo>

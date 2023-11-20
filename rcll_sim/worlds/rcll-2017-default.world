@@ -140,12 +140,12 @@
     <include>
       <name>tag_01</name>
       <uri>model://tag</uri>
-      <pose>0 -1 0.2 0 0 0</pose>
+      <pose>-5.33 5.4 0.5 0 0 0</pose><!--ORIGINAL POSE <pose>0 -1 0.2 0 0 0</pose>-->
     </include>
     <include>
       <name>tag_02</name>
       <uri>model://tag</uri>
-      <pose>0 -1 0.2 0 0 0</pose>
+      <pose>4.02 0.5 0.2 0 0 0</pose>
     </include>
     <include>
       <name>tag_17</name>
@@ -260,8 +260,8 @@
     
 
     <!-- Plugins for the world -->
-    <!--<plugin name="llsf_refbox_comm" filename="libllsf_refbox_comm.so" />-->
-    <!--<plugin name="timesync" filename="libtimesync.so" />-->
-    <!-- <plugin name="mps_placement" filename="libmps_placement.so" /> -->
+    <!-- <plugin name="llsf_refbox_comm" filename="libllsf_refbox_comm.so" />
+    <plugin name="timesync" filename="libtimesync.so" />
+    <plugin name="mps_placement" filename="libmps_placement.so" /> -->
   </world>
 </sdf>
