@@ -48,6 +48,7 @@ install(PROGRAMS
   scripts/circle.py
   scripts/omnidrive.py
   scripts/nav_to_pose.py
+  scripts/detect_marker.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
