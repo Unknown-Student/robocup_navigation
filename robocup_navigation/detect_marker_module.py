@@ -34,7 +34,7 @@ class DetectMarker(Node):
            img_to_pub.header = data.header
            self.image_pub.publish(img_to_pub)
 
-           m = Marker()
+           """ m = Marker()
            m.header.frame_id = "camera_link_optical"
            m.id = 0
            m.type = Marker.SPHERE
@@ -49,7 +49,7 @@ class DetectMarker(Node):
            m.color.g = 1.0
            m.color.b = 0.0
            m.color.a = 1.0
-           self.aruco_pub.publish(m)
+           self.aruco_pub.publish(m) """
 
         except CvBridgeError as e:
-                print(e)
+                print("An error has occured detecting the marker" + e)
