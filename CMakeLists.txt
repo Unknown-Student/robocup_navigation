@@ -50,6 +50,7 @@ install(PROGRAMS
   scripts/nav_to_pose.py
   scripts/detect_marker.py
   scripts/camera.py
+  scripts/follow_marker.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

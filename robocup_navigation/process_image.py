@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 MARKER_LENGTH = 0.13
-camMat = np.matrix([[528.43375656, 0., 320.5],[0., 528.43375656, 240.5],[0., 0., 1.]])
+camMat = np.matrix([[381.36246688113556, 0., 320.5],[0., 381.36246688113556, 240.5],[0., 0., 1.]])
 distCoef = np.array([0., 0., 0., 0., 0. ])
 
 def find_marker(image):
@@ -13,9 +13,9 @@ def find_marker(image):
     corners, ids, rejectedImgPoints = cv2.aruco.detectMarkers(image,arucoDict,parameters=arucoParams)
     if np.all(ids is not None):
         print(ids)
-        image_marker = draw_marker(image, corners, ids)
-        image_axis = marker_pos(image_marker,corners)
-        return image_axis
+        #image_marker = draw_marker(image, corners, ids)
+        #image_axis = marker_pos(image_marker,corners)
+        return corners
     else:
         return 0
 
@@ -26,11 +26,11 @@ def draw_marker(image, corners, ids):
 def grayscale_image(image):
     return cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
 
-def marker_pos(image,corners):
+def marker_pos(corners):
     rvecs, tvecs, objPoints = cv2.aruco.estimatePoseSingleMarkers(corners, MARKER_LENGTH, camMat, distCoef)
     print(tvecs)
-    image_axis = cv2.drawFrameAxes(image, camMat, distCoef, rvecs, tvecs, 0.1, 3)
-    return image_axis, tvecs
+    #image_axis = cv2.drawFrameAxes(image, camMat, distCoef, rvecs, tvecs, 0.1, 3)
+    return tvecs , rvecs
 
 def wait_on_gui():
     cv2.waitKey(2)

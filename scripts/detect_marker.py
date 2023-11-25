@@ -8,7 +8,8 @@ def main(args=None):
 
     rclpy.init(args=args)
     node = DetectMarker()
-    rclpy.spin(node)
+    while rclpy.ok():
+        rclpy.spin_once(node)
     node.destroy_node()
     rclpy.shutdown()
 

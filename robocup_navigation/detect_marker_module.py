@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg        import Image
@@ -5,7 +7,6 @@ from geometry_msgs.msg      import Point, Twist
 from visualization_msgs.msg import Marker
 from cv_bridge              import CvBridge, CvBridgeError
 import robocup_navigation.process_image as proc
-import numpy as np
 import time
 
 class DetectMarker(Node):
@@ -15,7 +16,8 @@ class DetectMarker(Node):
         self.image_sub = self.create_subscription(Image,"/image_in",self.callback, rclpy.qos.QoSPresetProfiles.SENSOR_DATA.value)
         self.image_pub = self.create_publisher(Image, "/image_out", 1)
         self.aruco_pub = self.create_publisher(Marker,"/marker_aruco", 1)
-        self.publisher_ = self.create_publisher(Twist, '/cmd_vel', 10)
+        self.pos_pub = self.create_publisher(Point, '/marker_pos', 10)
+        self.rot_pub = self.create_publisher(Point, '/marker_rot', 10)
 
         self.bridge = CvBridge()
 
@@ -28,11 +30,34 @@ class DetectMarker(Node):
                 print(e)
     
         try:
-           image, tvecs = proc.find_marker(cv_image)
+           corners = proc.find_marker(cv_image)
+           if corners != 0:
+                tvecs, rvecs = proc.marker_pos(corners)
 
-           img_to_pub = self.bridge.cv2_to_imgmsg(image, "bgr8")
+                point_out = Point()
+                rot_out = Point()
+
+                point_out.x = tvecs[0][0][0]
+                point_out.y = tvecs[0][0][1]
+                point_out.z = tvecs[0][0][2]
+
+                rot_out.x = rvecs[0][0][0]
+                rot_out.y = rvecs[0][0][1]
+                rot_out.z = rvecs[0][0][2]
+
+                self.get_logger().info(f"Pt: ({point_out.x},{point_out.y},{point_out.z})")
+                self.get_logger().info(f"Rot: ({rot_out.x},{rot_out.y},{rot_out.z})")
+                
+                self.pos_pub.publish(point_out)
+                self.rot_pub.publish(rot_out)
+                
+            #print("no marker detected")
+        
+            #image = proc.find_marker(cv_image)
+
+           """ img_to_pub = self.bridge.cv2_to_imgmsg(image, "bgr8")
            img_to_pub.header = data.header
-           self.image_pub.publish(img_to_pub)
+           self.image_pub.publish(img_to_pub) """
 
            """ m = Marker()
            m.header.frame_id = "camera_link_optical"
