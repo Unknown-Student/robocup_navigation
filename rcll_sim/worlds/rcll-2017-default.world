@@ -140,12 +140,12 @@
     <include>
       <name>tag_01</name>
       <uri>model://tag</uri>
-      <pose>-5.33 5.4 0.5 0 0 0</pose><!--ORIGINAL POSE <pose>0 -1 0.2 0 0 0</pose>-->
+      <pose>-5.33 5.4 0.483 0 0 0</pose><!--ORIGINAL POSE <pose>0 -1 0.2 0 0 0</pose>-->
     </include>
     <include>
       <name>tag_02</name>
       <uri>model://tag</uri>
-      <pose>4.02 0.5 0.2 0 0 0</pose>
+      <pose>4.02 0.5 0.483 0 0 0</pose>
     </include>
     <include>
       <name>tag_17</name>
