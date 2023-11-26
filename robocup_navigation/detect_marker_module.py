@@ -13,18 +13,17 @@ class DetectMarker(Node):
     def __init__(self):
         super().__init__('detect_marker')
         self.get_logger().info('Looking for the marker...')
-        self.image_sub = self.create_subscription(Image,"/image_in",self.callback, rclpy.qos.QoSPresetProfiles.SENSOR_DATA.value)
+        self.image_sub = self.create_subscription(Image,"/image_in",self.callback,10)
         self.image_pub = self.create_publisher(Image, "/image_out", 1)
         self.aruco_pub = self.create_publisher(Marker,"/marker_aruco", 1)
         self.pos_pub = self.create_publisher(Point, '/marker_pos', 10)
-        self.rot_pub = self.create_publisher(Point, '/marker_rot', 10)
 
         self.bridge = CvBridge()
 
     def callback(self,data):
         try:
-            cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-            self.get_logger().info('Image Recieved')
+            cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8") #bgr8 #mono8
+            #self.get_logger().info('Image Recieved')
             
         except CvBridgeError as e:
                 print(e)
@@ -74,4 +73,4 @@ class DetectMarker(Node):
            self.aruco_pub.publish(m) """
 
         except CvBridgeError as e:
-                print("An error has occured detecting the marker" + e)
+                print(e)
