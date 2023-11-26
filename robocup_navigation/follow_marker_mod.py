@@ -9,25 +9,39 @@ class FollowMarker(Node):
         self.get_logger().info('Follow Marker started')
         self.sub_ = self.create_subscription(Point,"/marker_pos",self.listener,10)
         self.pub_ = self.create_publisher(Twist,"/cmd_vel",10)
+        
+        self.declare_parameter("angular_speed_multiplier", 0.7)
+        self.declare_parameter("side_speed_multiplier", 0.7)
+        self.declare_parameter("forward_speed", 0.1)
+        self.declare_parameter("search_angular_speed", 0.5)
+        self.declare_parameter("dist_thresh", 0.2)
+        self.declare_parameter("filter_value", 0.9)
+
+        self.rcv_timeout_secs = self.get_parameter('rcv_timeout_secs').get_parameter_value().double_value
+        self.angular_speed_multiplier = self.get_parameter('angular_speed_multiplier').get_parameter_value().double_value
+        self.side_speed_multiplier = self.get_parameter('side_speed_multiplier').get_parameter_value().double_value
+        self.forward_speed = self.get_parameter('forward_speed').get_parameter_value().double_value
+        self.search_angular_speed = self.get_parameter('search_angular_speed').get_parameter_value().double_value
+        self.dist_thresh = self.get_parameter('dist_thresh').get_parameter_value().double_value
+        self.filter_value = self.get_parameter('filter_value').get_parameter_value().double_value
 
         self.timer = self.create_timer(0.1, self.timer_callback)
 
         self.target_val = 0.0
         self.target_dist = 0.0
         self.target_ang = 0.0
-        self.thresh_dist = 0.2
 
     def listener(self, data):
-        filter_val = 0.9
-        self.target_val = self.target_val * filter_val + data.x *(1-filter_val)     
-        self.target_dist = self.target_dist * filter_val + data.y * (1-filter_val)
-        self.target_ang = self.target_ang * filter_val + data.z * (1-filter_val)
+        filter_val = self.filter_value
+        self.target_val = self.target_val * filter_val + data.x *(1-filter_val) # x-value representing the position of the marker in the picture frame
+        self.target_dist = self.target_dist * filter_val + data.y * (1-filter_val)# y-value representing the distance to the marker
+        self.target_ang = self.target_ang * filter_val + data.z * (1-filter_val)# z-value representing the angle of the marker to the robot
 
     def timer_callback(self):
         msg = Twist()
-        if (self.target_dist > self.thresh_dist):
-            msg.linear.x = 0.1
-        msg.linear.y =  0.7 * self.target_ang
-        msg.angular.z = - 0.7 * self.target_val
+        if (self.target_dist > self.dist_thresh):
+            msg.linear.x = self.forward_speed
+        msg.linear.y =  self.side_speed_multiplier * self.target_ang
+        msg.angular.z = -self.angular_speed_multiplier * self.target_val
         self.get_logger().info(f"Vel_x: {msg.linear.x}, Vel_y: {msg.linear.y}, Ang_vel: {msg.angular.z}")
         self.pub_.publish(msg)
