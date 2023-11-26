@@ -33,23 +33,20 @@ class DetectMarker(Node):
            corners = proc.find_marker(cv_image)
            if corners != 0:
                 tvecs, rvecs = proc.marker_pos(corners)
-
+                rotMat, jacobian= proc.rodrigues(rvecs[0][0])
+                eulerXYZ= proc.rotationMatrixToEulerAngles(rotMat)
                 point_out = Point()
-                rot_out = Point()
 
+                # x horizontal distance from center of screen
+                # y distance to Aruco marker
+                # z Angle in rad relative to aruco marker
                 point_out.x = tvecs[0][0][0]
-                point_out.y = tvecs[0][0][1]
-                point_out.z = tvecs[0][0][2]
-
-                rot_out.x = rvecs[0][0][0]
-                rot_out.y = rvecs[0][0][1]
-                rot_out.z = rvecs[0][0][2]
+                point_out.y = tvecs[0][0][2]
+                point_out.z = eulerXYZ[1]
 
                 self.get_logger().info(f"Pt: ({point_out.x},{point_out.y},{point_out.z})")
-                self.get_logger().info(f"Rot: ({rot_out.x},{rot_out.y},{rot_out.z})")
                 
                 self.pos_pub.publish(point_out)
-                self.rot_pub.publish(rot_out)
                 
             #print("no marker detected")
         

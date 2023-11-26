@@ -16,17 +16,20 @@ class FollowMarker(Node):
 
         self.target_val = 0.0
         self.target_dist = 0.0
+        self.target_ang = 0.0
         self.thresh_dist = 0.2
 
     def listener(self, data):
         filter_val = 0.9
         self.target_val = self.target_val * filter_val + data.x *(1-filter_val)     
-        self.target_dist = self.target_dist * filter_val + data.z * (1-filter_val)
+        self.target_dist = self.target_dist * filter_val + data.y * (1-filter_val)
+        self.target_ang = self.target_ang * filter_val + data.z * (1-filter_val)
 
     def timer_callback(self):
         msg = Twist()
         if (self.target_dist > self.thresh_dist):
-            msg.linear.x = 0.2
+            msg.linear.x = 0.1
+        msg.linear.y =  0.7 * self.target_ang
         msg.angular.z = - 0.7 * self.target_val
-        self.get_logger().info(f"Vel: {msg.linear.x}, Ang_vel: {msg.angular.z}")
+        self.get_logger().info(f"Vel_x: {msg.linear.x}, Vel_y: {msg.linear.y}, Ang_vel: {msg.angular.z}")
         self.pub_.publish(msg)

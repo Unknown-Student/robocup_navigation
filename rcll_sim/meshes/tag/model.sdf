@@ -31,7 +31,7 @@
         <geometry>
           <plane>
             <normal>0 0 1</normal>
-            <size>0.135 0.135</size> <!-- Changed size from 0.135 0.135 to 0.13 0.13 -->
+            <size>0.130 0.130</size> <!-- Changed size from 0.135 0.135 to 0.13 0.13 -->
           </plane>
         </geometry>
 	<material>	  
