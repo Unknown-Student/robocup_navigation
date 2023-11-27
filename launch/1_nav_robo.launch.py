@@ -6,6 +6,7 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch_ros.actions import Node
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.substitutions import FindPackageShare
+from launch.substitutions import LaunchConfiguration
 
 
 def generate_launch_description():
@@ -77,8 +78,6 @@ def generate_launch_description():
       launch_arguments={'use_sim_time': 'true'}.items()
    )
 
-   print(f"nav2:{os.path.join(pkg_share, 'launch', 'navigation_launch.py')}")
-   print(f"slam:{os.path.join(pkg_share, 'launch', 'online_async_launch.py')}")
    ld.add_action(nav2)
    ld.add_action(robot_state_pubilsher)
    ld.add_action(gazebo)
