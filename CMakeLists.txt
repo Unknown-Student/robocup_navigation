@@ -51,11 +51,13 @@ install(PROGRAMS
   scripts/detect_marker.py
   scripts/camera.py
   scripts/follow_marker.py
+  benchmark/scripts/process_data.py
+  benchmark/scripts/metric.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
 install(DIRECTORY
-  config launch robotino3_description src rcll_sim
+  config launch robotino3_description src rcll_sim benchmark
   DESTINATION share/${PROJECT_NAME}/
 )
 

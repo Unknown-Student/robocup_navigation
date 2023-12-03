@@ -23,7 +23,10 @@
   <depend>opencv2</depend>
   <depend>numpy</depend>
   <depend>visualization_msgs</depend>
-    
+  <depend>transforms3d.euler</depend>
+  <depend>seaborn</depend>
+  <depend>tabulate</depend>
+  
   <exec_depend>ros2launch</exec_depend>
   <exec_depend>joint_state_publisher</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
