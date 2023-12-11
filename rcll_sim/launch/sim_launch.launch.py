@@ -1,41 +1,60 @@
 #!/usr/bin/python3
 import os
+import xacro
 
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
-from launch.actions import IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch_ros.actions import Node
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-
-package_name = 'robocup_navigation'
-world_file = 'rcll_sim/worlds/rcll-2027-default.world'
-
-default_rviz_config_path = os.path.join(package_name, 'rviz/rviz_basic_settings.rviz')
+from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
 
-    pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
-    pkg_radu_simulation = get_package_share_directory(package_name)
+    ld = LaunchDescription()
+
+    pkg_gazebo_ros = FindPackageShare(package="gazebo_ros").find("gazebo_ros")
+    pkg_share = FindPackageShare(package="robocup_navigation").find("robocup_navigation")
+
+    default_rviz_config_path = os.path.join(pkg_share, 'rviz/rviz_basic_settings.rviz')
+    
+    world_file = "rcll-2017-default.world"
+    world_path = os.path.join(pkg_share, "rcll_sim", "worlds", world_file)
+
+    gazebo_models_path = os.path.join(pkg_share, "rcll_sim", "meshes")
+    os.environ["GAZEBO_MODEL_PATH"] = gazebo_models_path
+
+    #Robot description
+    robot_file = "robotino.urdf"
+    robot_path = os.path.join(pkg_share, "robotino3_description", "robotino", "RobotinoModel", "urdf", robot_file)
+    robot_xacro = xacro.process_file(robot_path).toxml()
 
     # launch Gazebo by including its definition
     gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(pkg_gazebo_ros, 'launch', 'gazebo.launch.py'),
-        )
-    )
-
-    # load the world file
-    verbose = DeclareLaunchArgument(
-          'verbose',
-          default_value= 'True')    
+      PythonLaunchDescriptionSource(os.path.join(pkg_gazebo_ros, 'launch', 'gazebo.launch.py')),
+      launch_arguments={'world': world_path}.items()
+   )
     
-    world_arg = DeclareLaunchArgument(
-          'world',
-          default_value=[os.path.join(pkg_radu_simulation, 'worlds', world_file), ''],
-          description='SDF world file')
+    robot_state_pubilsher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
+        parameters=[{'robot_description': robot_xacro,
+                    'use_sim_time': True}] # add other parameters here if required
+   )
 
-    return LaunchDescription([
-        gazebo,
-        verbose,
-        world_arg
-    ])
+    spawn_entity = Node(
+      package='gazebo_ros',
+      executable='spawn_entity.py',
+      arguments=['-topic', 'robot_description',
+                 '-entity', 'robotino',
+                 '-x','4.5',
+                 '-y','0.5',
+                 '-Y','3.14'],
+      output='screen'
+    )
+    
+    ld.add_action(gazebo)
+    ld.add_action(robot_state_pubilsher)
+    ld.add_action(spawn_entity)
+
+    return ld
