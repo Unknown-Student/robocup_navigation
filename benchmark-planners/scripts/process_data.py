@@ -162,7 +162,9 @@ def main():
             'Planner',
             'Average path length (m)',
             'Average Time (s)',
+            'STD Time (s)',
             'Average cost',
+            'STD cost',
             'Max cost',
         ]
     ]
@@ -173,7 +175,9 @@ def main():
                 planners[i],
                 np.average(path_lengths[i]),
                 np.average(times[i]),
+                np.std(times[i]),
                 np.average(average_path_costs[i]),
+                np.std(average_path_costs[i]),
                 np.average(max_path_costs[i]),
             ]
         )
