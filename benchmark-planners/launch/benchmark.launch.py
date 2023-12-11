@@ -25,7 +25,7 @@ def generate_launch_description():
     nav2_bringup_dir = get_package_share_directory('nav2_bringup')
     robocup_bringup_dir = get_package_share_directory('robocup_navigation')
     config = os.path.join(
-        get_package_share_directory('robocup_navigation'), 'benchmark', 'config', 'benchmark.yaml'
+        get_package_share_directory('robocup_navigation'), 'benchmark-planners', 'config', 'benchmark.yaml'
     )
     map_file = os.path.join(nav2_bringup_dir, 'maps', 'turtlebot3_world.yaml')
     lifecycle_nodes = ['map_server', 'planner_server']
