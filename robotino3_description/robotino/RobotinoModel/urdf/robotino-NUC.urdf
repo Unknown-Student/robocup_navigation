@@ -174,8 +174,9 @@
       </geometry>
     </collision>
   </link>
-  
+
   # Links and Joints for Real Lasers
+
   <joint name="laser_joint_front" type="fixed">
     <origin rpy="0 3.14 3.14" xyz="0.18 0 0.28"/>
     <parent link="base_link"/>
@@ -191,6 +192,8 @@
   </joint>
   <link name="laser_link_back">
   </link>
+
+
   <gazebo>
     <plugin name='omni_drive' filename='libgazebo_ros_planar_move.so'>
       <commandTopic>cmd_vel</commandTopic>
