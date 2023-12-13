@@ -25,7 +25,7 @@ def generate_launch_description():
    )
    
    pkg_slam = FindPackageShare(package="slam_toolbox").find("slam_toolbox")
-   slam_param_file = "mapper_params_online_async.yaml"
+   slam_param_file = "mapper_params_online_async_robotino.yaml"
    slam_param = os.path.join(pkg_share, "config", slam_param_file)
    slam = IncludeLaunchDescription(
       PythonLaunchDescriptionSource(os.path.join(pkg_share, 'launch', 'online_async_launch.py')),
@@ -38,6 +38,13 @@ def generate_launch_description():
       launch_arguments={'use_sim_time': 'true'}.items()
    )
 
+   omnidrive = Node(
+      package= pkg_share,
+      executable="omnidrive.py",
+      name="omidrive",
+      arguments=["192.168.1.167"]
+   )
+
    #Robot description
    robot_file = "robotino.urdf"
    robot_path = os.path.join(pkg_share, "robotino3_description", "robotino", "RobotinoModel", "urdf", robot_file)
@@ -48,14 +55,16 @@ def generate_launch_description():
       executable='robot_state_publisher',
       output='screen',
       parameters=[{'robot_description': robot_xacro,
-                  'use_sim_time': True}] # add other parameters here if required
+                  'use_sim_time': ""}] # add other parameters here if required
    )
 
    sim_launch = IncludeLaunchDescription(
       PythonLaunchDescriptionSource(os.path.join(pkg_share, 'rcll_sim', 'launch', 'sim_launch.launch.py'))
    )
 
-   ld.add_action(nav2)
+   #ld.add_action(nav2)
+   #ld.add_action(omnidrive)
+   #ld.add_action(robot_state_pubilsher)
    ld.add_action(sim_launch)
    ld.add_action(rviz2)
    ld.add_action(slam)
