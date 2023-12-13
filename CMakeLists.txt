@@ -51,6 +51,7 @@ install(PROGRAMS
   scripts/detect_marker.py
   scripts/camera.py
   scripts/follow_marker.py
+  scripts/flip_laser.py
   benchmark-planners/scripts/process_data.py
   benchmark-planners/scripts/metric.py
   DESTINATION lib/${PROJECT_NAME}
