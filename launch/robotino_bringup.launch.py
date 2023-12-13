@@ -55,7 +55,7 @@ def generate_launch_description():
       executable='robot_state_publisher',
       output='screen',
       parameters=[{'robot_description': robot_xacro,
-                  'use_sim_time': ""}] # add other parameters here if required
+                  'use_sim_time': True}] # add other parameters here if required
    )
 
    sim_launch = IncludeLaunchDescription(
@@ -63,9 +63,9 @@ def generate_launch_description():
    )
 
    #ld.add_action(nav2)
-   #ld.add_action(omnidrive)
-   #ld.add_action(robot_state_pubilsher)
-   ld.add_action(sim_launch)
+   ld.add_action(omnidrive)
+   ld.add_action(robot_state_pubilsher)
+   #ld.add_action(sim_launch)
    ld.add_action(rviz2)
    ld.add_action(slam)
    return ld
